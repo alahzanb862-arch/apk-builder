@@ -17,7 +17,7 @@ jobs:
       - name: Assemble Debug APK
         run: |
           cd extracted_proj
-          gradle assembleDebug --no-daemon
+          gradle assembleDebug --no-daemon -Dorg.gradle.unsafe.configuration-cache=false
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug

@@ -8,15 +8,17 @@ jobs:
       - name: Extract zip
         run: |
           unzip -q callai-nov-22-2026-4-56-45-pm.zip -d extracted_proj
-          ls -la extracted_proj
       - uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Assemble Debug APK
+      - name: Prepare debug keystore and Assemble Debug APK
         run: |
           cd extracted_proj
+          keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          mkdir -p app
+          cp -f debug.keystore app/debug.keystore
           gradle assembleDebug --no-daemon -Dorg.gradle.unsafe.configuration-cache=false
       - uses: actions/upload-artifact@v4
         with:
